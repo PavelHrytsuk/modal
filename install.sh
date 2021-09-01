@@ -1,0 +1,15 @@
+bin/magento setup:install \
+--base-url=http://magent-learn.loc \
+--db-host=localhost \
+--db-name=magent_learn \
+--db-user=root \
+--db-password=Razor_007 \
+--admin-firstname=admin \
+--admin-lastname=admin \
+--admin-email=admin@admin.com \
+--admin-user=admin \
+--admin-password=admin123 \
+--language=en_US \
+--currency=USD \
+--timezone=America/Chicago \
+--use-rewrites=1

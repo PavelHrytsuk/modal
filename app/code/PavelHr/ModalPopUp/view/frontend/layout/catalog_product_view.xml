@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magent">
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Block\Product\View" name="modal" template="PavelHr_ModalPopUp::modal.phtml">
+            </block>
+        </referenceContainer>
+    </body>
+</page>
