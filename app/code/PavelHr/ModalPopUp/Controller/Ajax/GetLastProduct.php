@@ -26,7 +26,7 @@ class GetLastProduct implements HttpGetActionInterface
     public function execute()
     {
 
-        $data = $this->_indexViewModel->getAllQuotedItem();
+        $data = $this->_indexViewModel->getLastAddedCategory();
         $resultJson = $this->_resultJsonFactory->create();
         return $resultJson->setData($data);
     }

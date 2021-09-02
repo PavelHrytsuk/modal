@@ -14,14 +14,15 @@ define([
         })
     })
 
-    $('.last_product').click(function(){
+    $('.last-product').click(function(){
         console.log('Button was click!');
         $.ajax({
             url: "http://magent-learn.loc/allproducts/Ajax/GetLastProduct",
             type: "GET",
-            success: function(data){
+            success: function(data) {
                 console.log(data);
             }
         })
     })
+
 })

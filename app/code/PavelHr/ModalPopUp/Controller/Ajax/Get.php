@@ -26,7 +26,7 @@ class Get implements HttpGetActionInterface
     public function execute()
     {
 
-        $data = $this->_indexViewModel->getProducts();
+        $data = $this->_indexViewModel->getCurrentCategoryProduct(15);
         $resultJson = $this->_resultJsonFactory->create();
         return $resultJson->setData($data);
     }

@@ -38,15 +38,10 @@ class FetchProducts
      */
     public function getProducts()
     {
-        /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
-        $collection = $this->productCollectionFactory->create();
-        $collection->joinAttribute('status', 'catalog_product/status', 'entity_id', null, 'inner');
-        $collection->joinAttribute('visibility', 'catalog_product/visibility', 'entity_id', null, 'inner');
-        $collection->addAttributeToFilter('status', ['in' => $this->productStatus->getVisibleStatusIds()])
-            ->addAttributeToFilter('visibility', ['in' => $this->productVisibility->getVisibleInSiteIds()])
-            ->addAttributeToFilter('sample_attribute', 1)
-            ->addFieldToSelect('name');
+        $collection = $this->createCollection();
 
+        $collection->addAttributeToSelect('sample_attribute')
+                    ->addFieldToSelect('name');
         $productArr = [];
 
         foreach ($collection->getItems() as $key => $productItem) {
@@ -54,6 +49,24 @@ class FetchProducts
         }
 
         return $productArr;
+    }
+
+    public function getCurrentCategoryProduct($categoryId){
+
+        $collection = $this->createCollection();
+        $collection->addCategoriesFilter(['in' => [$categoryId]]);
+        return $collection;
+    }
+
+    private function createCollection(){
+
+        $collection = $this->productCollectionFactory->create();
+        $collection->joinAttribute('status', 'catalog_product/status', 'entity_id', null, 'inner');
+        $collection->joinAttribute('visibility', 'catalog_product/visibility', 'entity_id', null, 'inner');
+        $collection->addAttributeToFilter('status', ['in' => $this->productStatus->getVisibleStatusIds()])
+            ->addAttributeToFilter('visibility', ['in' => $this->productVisibility->getVisibleInSiteIds()]);
+
+        return $collection;
     }
 
 }
