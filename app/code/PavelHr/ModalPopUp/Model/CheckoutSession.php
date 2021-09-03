@@ -19,28 +19,28 @@ class CheckoutSession
         $this->fetchProducts = $fetchProducts;
     }
 
-    public function getLastAddedCategory()
+    public function getLastAddedProduct()
     {
         $cartProductsInfo = $this->cart->getQuote()->getItems();
 
         $info = [];
-        $lastProductInfo = [];
 
         foreach ($cartProductsInfo as $key => $productItem)
         {
             $info[$key]['data'] = $productItem->getData();
         }
 
-        $product = $this->getLastAddedId($info);
+        $lastProductId = $this->getLastAddedProductId($info);
 
-        $categoryId = $this->getProductCategoryId($product['product_id'])[0];
+        $categoryId = $this->getProductCategoryId($lastProductId['product_id'])[0];
 
-        $lastProductInfo = array(['product_id' => $product['product_id'], 'category_id' => $categoryId, 'sku' => $product['sku']]);
+        $lastProductInfo = array(['product_id' => $lastProductId['product_id'], 'category_id' => $categoryId,
+            'sku' => $lastProductId['sku'], 'custom_attribute' => false]);
 
         $allProducts = $this->fetchProducts->getProducts();
 
-        $checkExists = $this->checkSuggestAttribute($lastProductInfo, $allProducts);
-        return $checkExists;
+        $checkLastProductInfo = $this->checkSuggestAttribute($lastProductInfo, $allProducts);
+        return $checkLastProductInfo;
 
     }
 
@@ -52,7 +52,7 @@ class CheckoutSession
 
     }
 
-    private function getLastAddedId($infoArray)
+    private function getLastAddedProductId($infoArray)
     {
         $date = '';
 
@@ -70,15 +70,15 @@ class CheckoutSession
 
     private function checkSuggestAttribute($product, $allProduct)
     {
-        $checkResponse = 'Does not exist';
+
         foreach ($allProduct as $key => $productItem)
         {
             if(($product[0]['sku'] == $productItem['data']['sku']) and (isset($productItem['data']['sample_attribute']) and $productItem['data']['sample_attribute'] == 1)){
-                $checkResponse = 'Exists';
+                $product[0]['custom_attribute'] = true;
             }
         }
 
-        return $checkResponse;
+        return $product;
     }
 }
 

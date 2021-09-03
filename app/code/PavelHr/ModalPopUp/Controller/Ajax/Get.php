@@ -23,10 +23,13 @@ class Get implements HttpGetActionInterface
         $this->context = $context;
     }
 
+    /**
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function execute()
     {
 
-        $data = $this->_indexViewModel->getCurrentCategoryProduct(15);
+        $data = $this->_indexViewModel->getCurrentCategoryProduct(23);
         $resultJson = $this->_resultJsonFactory->create();
         return $resultJson->setData($data);
     }

@@ -1,26 +1,19 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PavelHr\ModalPopUp\Model;
 
-use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 
 class FetchProducts
 {
+
     private CollectionFactory $productCollectionFactory;
     private Status $productStatus;
     private Visibility $productVisibility;
 
 
-    /**
-    * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory
-    * @param \Magento\Catalog\Model\Product\Attribute\Source\Status $productStatus
-    * @param \Magento\Catalog\Model\Product\Visibility $productVisibility
-    * @throws \Magento\Framework\Exception\LocalizedException
-    */
     public function __construct(
         CollectionFactory $productCollectionFactory,
         Status $productStatus,
@@ -33,41 +26,48 @@ class FetchProducts
     }
 
     /**
-     * @return \Magento\Framework\DataObject[]
+     * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getProducts()
     {
-        $collection = $this->createCollection();
 
-        $collection->addAttributeToSelect('sample_attribute')
-                    ->addFieldToSelect('name');
-        $productArr = [];
-
-        foreach ($collection->getItems() as $key => $productItem) {
-            $productArr[$key]['data'] = $productItem->getData();
-        }
+        $collection = $this->createCollection()->addAttributeToSelect('sample_attribute')->getItems();
+        $productArr = $this->getProductData($collection);
 
         return $productArr;
     }
 
     public function getCurrentCategoryProduct($categoryId){
 
-        $collection = $this->createCollection();
-        $collection->addCategoriesFilter(['in' => [$categoryId]]);
-        return $collection;
+        $filterCollection = $this->createCollection()->addCategoriesFilter(['eq' => [$categoryId]])->getItems();
+
+        $infoArray = $this->getProductData($filterCollection);
+
+        return $infoArray;
+
     }
 
-    private function createCollection(){
+    private function createCollection(): \Magento\Catalog\Model\ResourceModel\Product\Collection
+    {
 
         $collection = $this->productCollectionFactory->create();
         $collection->joinAttribute('status', 'catalog_product/status', 'entity_id', null, 'inner');
         $collection->joinAttribute('visibility', 'catalog_product/visibility', 'entity_id', null, 'inner');
         $collection->addAttributeToFilter('status', ['in' => $this->productStatus->getVisibleStatusIds()])
-            ->addAttributeToFilter('visibility', ['in' => $this->productVisibility->getVisibleInSiteIds()]);
-
+            ->addAttributeToFilter('visibility', ['in' => $this->productVisibility->getVisibleInSiteIds()])
+            ->addFieldToSelect('name');
         return $collection;
     }
 
+    private function getProductData($productArray){
+        $dataArray = [];
+
+        foreach ($productArray as $key => $productItem) {
+            $dataArray[$key]['data'] = $productItem->getData();
+        }
+
+        return $dataArray;
+    }
 }
 

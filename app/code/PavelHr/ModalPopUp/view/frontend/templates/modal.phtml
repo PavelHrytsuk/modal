@@ -1,5 +1,4 @@
 <div class="modal-block" style="display: none">
-    <p>Hello) It's modal window.</p>
 </div>
 <script type="text/javascript">
     require([
@@ -7,10 +6,27 @@
         "Magento_Ui/js/modal/modal"
     ],function($, modal) {
 
+        function getLastProduct(){
+            $.ajax({
+                url: "http://magent-learn.loc/allproducts/Ajax/GetSuggestProduct",
+                type: "GET",
+                success: function(data){
+                    if(data['answer'] === false){
+                        console.log('Empty attribute')
+                    }else{
+                        const $modalPop = $('.modal-block');
+                        $modalPop.css('display', 'block');
+                        $modalPop.append("<p> data.answer.data.name </p>")
+                        $modalPop.modal('openModal');
+                    }
+                }
+            });
+        }
+
         let options = {
             type: 'popup',
             responsive: true,
-            title: 'Main title',
+            title: 'Suggest another product',
             buttons: [{
                 text: $.mage.__('Ok'),
                 class: '',
@@ -22,9 +38,7 @@
 
         const popup = modal(options, $('.modal-block'));
         $('#product-addtocart-button').click(function() {
-            const $modalPop =  $('.modal-block');
-            $modalPop.css('display', 'block');
-            $modalPop.modal('openModal');
+            setTimeout(getLastProduct, 1500);
         });
     });
 </script>
