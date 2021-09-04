@@ -10,13 +10,12 @@
             $.ajax({
                 url: "http://magent-learn.loc/allproducts/Ajax/GetSuggestProduct",
                 type: "GET",
-                success: function(data){
-                    if(data['answer'] === false){
-                        console.log('Empty attribute')
-                    }else{
+                success: function(resp){
+                    if(resp['answer'] !== false){
+                        $('.modal-info').remove();
                         const $modalPop = $('.modal-block');
                         $modalPop.css('display', 'block');
-                        $modalPop.append("<p> data.answer.data.name </p>")
+                        $modalPop.append("<p class='modal-info'>Also, you can buy \"" + resp['answer']['data']['name'] + "\"</p>")
                         $modalPop.modal('openModal');
                     }
                 }
@@ -38,7 +37,7 @@
 
         const popup = modal(options, $('.modal-block'));
         $('#product-addtocart-button').click(function() {
-            setTimeout(getLastProduct, 1500);
+            setTimeout(getLastProduct, 1000);
         });
     });
 </script>
