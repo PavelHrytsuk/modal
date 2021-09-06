@@ -65,6 +65,7 @@ class FetchProducts
 
         foreach ($productArray as $key => $productItem) {
             $dataArray[$key]['data'] = $productItem->getData();
+            $dataArray[$key]['data']['url'] = $productItem->getProductUrl();
         }
 
         return $dataArray;
